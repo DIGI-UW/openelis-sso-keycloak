@@ -780,7 +780,7 @@
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
       "serviceAccountsEnabled": false,
-      "publicClient": true,
+      "publicClient": false,
       "frontchannelLogout": true,
       "protocol": "saml",
       "attributes": {
@@ -802,7 +802,8 @@
         "saml.allow.ecp.flow": "false",
         "saml.onetimeuse.condition": "false",
         "saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer": "NONE",
-        "saml_signature_canonicalization_method": "http://www.w3.org/2001/10/xml-exc-c14n#"
+        "saml_signature_canonicalization_method": "http://www.w3.org/2001/10/xml-exc-c14n#",
+        "frontchannel.logout.url": "http://localhost/api/OpenELIS-Global/Logout"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
