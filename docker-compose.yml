@@ -50,13 +50,13 @@ services:
             - "15432:5432"
         restart: always
         env_file:
-            - ./volumes/database/database.env
+            - ./configs/database/database.env
         environment:
             - DB_PASSWORD=${OE_DB_PASSWORD}
             - DB_SUPERUSER_PASSWORD=${ADMIN_PASSWORD}   
         volumes:
               # preserves the database between containers
-            - ./volumes/database/data:/var/lib/postgresql/data                
+            - ./configs/database/data:/var/lib/postgresql/data                
 
         logging: *local-logging    
         networks:
@@ -94,15 +94,15 @@ services:
             - SSL_TRUSTSTORE_PASSWORD
         volumes:
             -  key_trust-store-volume:/etc/openelis-global
-            - ./volumes/plugins/:/var/lib/openelis-global/plugins
-            - ./volumes/logs/oeLogs:/var/lib/openelis-global/logs
-            - ./volumes/logs/tomcatLogs/:/usr/local/tomcat/logs
-            - ./volumes/properties/SystemConfiguration.properties:/var/lib/openelis-global/properties/SystemConfiguration.properties
-            - ./volumes/analyzer/analyzer-test-map.csv:/var/lib/openelis-global/analyzer/analyzer-test-map.csv
-            - ./volumes/odoo/odoo-test-product-mapping.csv:/var/lib/openelis-global/odoo/odoo-test-product-mapping.csv
-            - ./volumes/ocl:/var/lib/openelis-global/ocl
-            - ./volumes/programs/:/var/lib/openelis-global/programs
-            - ./volumes/configuration:/var/lib/openelis-global/configuration
+            - ./configs/plugins/:/var/lib/openelis-global/plugins
+            - ./configs/logs/oeLogs:/var/lib/openelis-global/logs
+            - ./configs/logs/tomcatLogs/:/usr/local/tomcat/logs
+            - ./configs/properties/SystemConfiguration.properties:/var/lib/openelis-global/properties/SystemConfiguration.properties
+            - ./configs/analyzer/analyzer-test-map.csv:/var/lib/openelis-global/analyzer/analyzer-test-map.csv
+            - ./configs/odoo/odoo-test-product-mapping.csv:/var/lib/openelis-global/odoo/odoo-test-product-mapping.csv
+            - ./configs/programs/:/var/lib/openelis-global/programs
+            - ./configs/configuration:/var/lib/openelis-global/configuration
+            - ./configs/menu/menu_config.json:/var/lib/openelis-global/menu/menu_config.json
             -  lucene_index-vol:/var/lib/lucene_index
         secrets:
             - source: common.properties
@@ -143,7 +143,7 @@ services:
 
          
     frontend.openelis.org:
-        image: itechuw/openelis-global-2-frontend:3.2.0.2
+        image: itechuw/openelis-global-2-frontend:develop
         container_name: openelisglobal-front-end
         platform: linux/amd64
         networks:
@@ -154,7 +154,7 @@ services:
         tty: true
 
     proxy:
-        image: itechuw/openelis-global-2-proxy:3.2.0.2
+        image: itechuw/openelis-global-2-proxy:develop
         container_name: openelisglobal-proxy
         platform: linux/amd64
         ports:
@@ -163,7 +163,7 @@ services:
         volumes:
             - certs-vol:/etc/nginx/certs/
             - keys-vol:/etc/nginx/keys/
-            - ./volumes/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             # - /KEYSTORE_PASSWORD:/etc/nginx/private/key_pass
             # - /etc/openelis-global/nginx.cert.pem:/etc/nginx/certs/cert.crt
             # - /etc/openelis-global/nginx.key.pem:/etc/nginx/certs/cert.key
@@ -177,7 +177,7 @@ services:
     # KEY CLOAK        
     keycloak.openelis.org:
         container_name: keycloak
-        image: quay.io/keycloak/keycloak:25.0.1
+        image: quay.io/keycloak/keycloak:26.4.5
         ports:
             - 8080:8080
         command: start-dev --import-realm
@@ -196,7 +196,7 @@ services:
         networks:
             - openelis-network
         volumes :
-            - ./volumes/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+            - ./configs/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
         restart: unless-stopped
         logging: *local-logging
         depends_on:
@@ -218,7 +218,7 @@ services:
             
 secrets:
   common.properties:
-    file:  ./volumes/properties/common.properties  
+    file:  ./configs/properties/common.properties  
 
 networks:
   openelis-network:
